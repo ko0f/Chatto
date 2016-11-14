@@ -70,13 +70,14 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
 
     fileprivate func updateFirstResponderWithInputItem(_ inputItem: ChatInputItemProtocol) {
         let responder = self.chatInputBar.textView!
-        let inputView = inputItem.inputView
-        responder.inputView = inputView
-        if responder.isFirstResponder {
-            self.setHeight(forInputView: inputView)
-            responder.reloadInputViews()
-        } else {
-            responder.becomeFirstResponder()
+        if let inputView = inputItem.inputView {
+            responder.inputView = inputView
+            if responder.isFirstResponder {
+                self.setHeight(forInputView: inputView)
+                responder.reloadInputViews()
+            } else {
+                responder.becomeFirstResponder()
+            }
         }
     }
 
