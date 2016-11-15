@@ -35,10 +35,10 @@ public protocol ViewModelBuilderProtocol {
 public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView)
-    func userDidTapOnAvatar(viewModel: ViewModelT)
+    func userDidTapOnAvatar(viewModel: ViewModelT, avatarView: UIView)
     func userDidTapOnBubble(viewModel: ViewModelT, bubbleView: UIView)
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT)
+    func userDidBeginLongPressOnBubble(viewModel: ViewModelT, bubbleView: UIView)
+    func userDidEndLongPressOnBubble(viewModel: ViewModelT, bubbleView: UIView)
 }
 
 open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT>: BaseChatItemPresenter<BaseMessageCollectionViewCell<BubbleViewT>> where
@@ -185,15 +185,27 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     }
 
     open func onCellBubbleLongPressBegan() {
-        self.interactionHandler?.userDidBeginLongPressOnBubble(viewModel: self.messageViewModel)
+        guard let cell = self.cell else {
+            assert(false, "Investigate -> Fix or remove assert")
+            return
+        }
+        self.interactionHandler?.userDidBeginLongPressOnBubble(viewModel: self.messageViewModel, bubbleView: cell.bubbleView)
     }
 
     open func onCellBubbleLongPressEnded() {
-        self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
+        guard let cell = self.cell else {
+            assert(false, "Investigate -> Fix or remove assert")
+            return
+        }
+        self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel, bubbleView: cell.bubbleView)
     }
 
     open func onCellAvatarTapped() {
-        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
+        guard let cell = self.cell else {
+            assert(false, "Investigate -> Fix or remove assert")
+            return
+        }
+        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel, avatarView: cell.avatarView)
     }
 
     open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
