@@ -36,7 +36,7 @@ public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView)
     func userDidTapOnAvatar(viewModel: ViewModelT)
-    func userDidTapOnBubble(viewModel: ViewModelT)
+    func userDidTapOnBubble(viewModel: ViewModelT, bubbleView: UIView)
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
     func userDidEndLongPressOnBubble(viewModel: ViewModelT)
 }
@@ -177,7 +177,11 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     }
 
     open func onCellBubbleTapped() {
-        self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel)
+        guard let cell = self.cell else {
+            assert(false, "Investigate -> Fix or remove assert")
+            return 
+        }
+        self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel, bubbleView: cell.bubbleView)
     }
 
     open func onCellBubbleLongPressBegan() {
